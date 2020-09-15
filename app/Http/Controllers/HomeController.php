@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Http\Controllers\Controller;
-use App\Mail\WelcomeNewUserMail;
-use Illuminate\Support\Facades\Mail;
+
+
+use App\Events\NewCustomerRegistrationEvent;
 
 
 class HomeController extends Controller
@@ -32,24 +33,12 @@ class HomeController extends Controller
     			'name' => 'required',
     			'password' => 'required|min:4'
 		    ]);
-
-		    $user = User::insert($request);
-			$user = new User;
-			$user->name = $request->name;
-			$user->email = $request->email;
-			$user->password = bcrypt($request->password);
-			$user->save();
-
-			event(new NewCustomerRegistrationEvent());
-
-			//send them email
-			Mail::to('email@email.com ')->send(new WelcomeNewUserMail());
-
-			// //register to newsletter
-			dump("registered to newsletter");
-
-			// //slack emssage to admin
-			dump("slack message here");
+		    $data= $request->all();
+		    $data['password'] = bcrypt($request->password);
+		    // dd($data);
+		    $user = User::create($data);
+		    
+			event(new NewCustomerRegistrationEvent($user));
     	}
 
 

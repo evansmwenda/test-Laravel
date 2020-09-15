@@ -13,24 +13,16 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 class NewCustomerRegistrationEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
+    public $user;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($user)
     {
         //
-    }
-
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return Channel|array
-     */
-    public function broadcastOn()
-    {
-        return new PrivateChannel('channel-name');
+        $this->user = $user;
     }
 }
