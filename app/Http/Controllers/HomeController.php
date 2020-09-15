@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facade\Mail;
+use App\Mail\WelcomeNewUserMail;
+use Illuminate\Support\Facades\Mail;
 
 
 class HomeController extends Controller
@@ -27,23 +28,27 @@ class HomeController extends Controller
     	if($request->method() == "POST"){
     		//user has submitted form values
     		$this->validate($request, [
-		        'email' => 'required|email',
+		        'email' => 'required|email|unique:users',
     			'name' => 'required',
     			'password' => 'required|min:4'
 		    ]);
+
+		    $user = User::insert($request);
 			$user = new User;
 			$user->name = $request->name;
 			$user->email = $request->email;
 			$user->password = bcrypt($request->password);
 			$user->save();
 
-			//send them email
-			Mail::to($user->email)->send(new WelcomeNewUserMail());
+			event(new NewCustomerRegistrationEvent());
 
-			//register to newsletter
+			//send them email
+			Mail::to('email@email.com ')->send(new WelcomeNewUserMail());
+
+			// //register to newsletter
 			dump("registered to newsletter");
 
-			//slack emssage to admin
+			// //slack emssage to admin
 			dump("slack message here");
     	}
 
