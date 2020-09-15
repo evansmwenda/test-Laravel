@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facade\Mail;
 
 
 class HomeController extends Controller
@@ -35,6 +36,15 @@ class HomeController extends Controller
 			$user->email = $request->email;
 			$user->password = bcrypt($request->password);
 			$user->save();
+
+			//send them email
+			Mail::to($user->email)->send(new WelcomeNewUserMail());
+
+			//register to newsletter
+			dump("registered to newsletter");
+
+			//slack emssage to admin
+			dump("slack message here");
     	}
 
 

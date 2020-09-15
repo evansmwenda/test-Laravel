@@ -1,5 +1,5 @@
 <?php
-
+// use App\Mail\WelcomeNewUserMail;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,3 +15,6 @@ Route::get('/','HomeController@index');
 Route::get('about','HomeController@about');
 Route::get('contact','HomeController@contact');
 Route::match(['get','post'],'customers','HomeController@customers');
+Route::get('/email' ,function (){
+	return (new App\Mail\WelcomeNewUserMail())->render();
+});
