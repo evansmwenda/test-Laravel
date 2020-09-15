@@ -25,7 +25,7 @@
 			<ul>
 				@foreach($customers as $customer)
 
-					<li>{{ $customer->name }} </li>
+					<li>{{ $customer->name }} <span class="text-muted"> ({{ $customer->email}}) </span> </li>
 
 				@endforeach
 			</ul>
